@@ -1,6 +1,6 @@
 {
   "name": "ek-digital-clock",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Modern digital clock Lovelace card for Home Assistant with namedays, holidays and temperatures",
   "type": "module",
   "repository": {

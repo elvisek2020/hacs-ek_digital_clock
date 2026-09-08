@@ -18,6 +18,7 @@ export const TIME_FORMAT_PRESETS: FormatPreset[] = [
 
 export const DATE_FORMAT_PRESETS: FormatPreset[] = [
   { value: 'cccc dd. L.', label: 'úterý 08. 9.' },
+  { value: 'cccc dd. LL. yyyy', label: 'úterý 08. 09. 2026' },
   { value: 'ccc dd. LL.', label: 'út 08. 09.' },
   { value: 'dd. MM. yyyy', label: '08. 09. 2026' },
   { value: 'cccc d. MMMM', label: 'úterý 8. září' },

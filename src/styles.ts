@@ -39,6 +39,7 @@ export const cardStyles = css`
   .center {
     text-align: center;
     min-width: 0;
+    color: var(--primary-text-color);
   }
 
   .time {
@@ -82,7 +83,7 @@ export const cardStyles = css`
   .temp {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     min-width: 0;
   }
 
@@ -96,24 +97,12 @@ export const cardStyles = css`
     text-align: right;
   }
 
-  .temp-header {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  .temp-label {
+    font-size: 0.85em;
+    font-weight: 700;
+    line-height: 1.2;
     min-width: 0;
     max-width: 100%;
-  }
-
-  .temp.right .temp-header {
-    flex-direction: row-reverse;
-  }
-
-  .temp-label {
-    font-size: 0.8em;
-    font-weight: 600;
-    line-height: 1.25;
-    opacity: 0.8;
-    min-width: 0;
     overflow-wrap: anywhere;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -121,27 +110,45 @@ export const cardStyles = css`
     overflow: hidden;
   }
 
+  .temp-reading {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .temp.right .temp-reading {
+    flex-direction: row-reverse;
+  }
+
   .temp-value {
     display: flex;
     align-items: baseline;
     gap: 2px;
+    min-width: 0;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+    color: var(--primary-text-color);
+  }
+
+  .temp-number {
+    font-size: 1em;
   }
 
   .temp-unit {
-    font-size: 0.65em;
-    font-weight: 600;
-    opacity: 0.75;
+    font-size: 0.72em;
+    font-weight: 700;
+    /* jednotka dědí accent barvu z .temp */
   }
 
-  ha-icon {
-    --mdc-icon-size: 1.1em;
-    width: 1.1em;
-    height: 1.1em;
+  .temp ha-icon {
+    --mdc-icon-size: 1em;
+    width: 1em;
+    height: 1em;
     flex-shrink: 0;
+    color: inherit;
   }
 
   /* Velikostní varianty */
@@ -159,8 +166,11 @@ export const cardStyles = css`
   :host([data-size='compact']) .significant {
     font-size: 0.8em;
   }
-  :host([data-size='compact']) .temp-value {
-    font-size: 1.1em;
+  :host([data-size='compact']) .temp-label {
+    font-size: 0.75em;
+  }
+  :host([data-size='compact']) .temp-reading {
+    font-size: 1.15em;
   }
 
   :host([data-size='normal']) .time {
@@ -174,8 +184,8 @@ export const cardStyles = css`
   :host([data-size='normal']) .significant {
     font-size: 0.9em;
   }
-  :host([data-size='normal']) .temp-value {
-    font-size: 1.35em;
+  :host([data-size='normal']) .temp-reading {
+    font-size: 1.4em;
   }
 
   :host([data-size='large']) ha-card {
@@ -192,7 +202,10 @@ export const cardStyles = css`
   :host([data-size='large']) .significant {
     font-size: 1.05em;
   }
-  :host([data-size='large']) .temp-value {
-    font-size: 1.6em;
+  :host([data-size='large']) .temp-label {
+    font-size: 0.95em;
+  }
+  :host([data-size='large']) .temp-reading {
+    font-size: 1.65em;
   }
 `;

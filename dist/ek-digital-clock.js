@@ -794,7 +794,7 @@ function ir(t) {
   const n = e.length === 4 ? `#${e[1]}${e[1]}${e[2]}${e[2]}${e[3]}${e[3]}` : e, s = parseInt(n.slice(1, 3), 16), i = parseInt(n.slice(3, 5), 16), r = parseInt(n.slice(5, 7), 16);
   return `${s}, ${i}, ${r}`;
 }
-const rr = "1.0.2", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
+const rr = "1.0.3", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
 class re extends Error {
 }
 class lr extends re {
@@ -6314,6 +6314,7 @@ const ao = [
   { value: "H:mm", label: "8:38" }
 ], oo = [
   { value: "cccc dd. L.", label: "úterý 08. 9." },
+  { value: "cccc dd. LL. yyyy", label: "úterý 08. 09. 2026" },
   { value: "ccc dd. LL.", label: "út 08. 09." },
   { value: "dd. MM. yyyy", label: "08. 09. 2026" },
   { value: "cccc d. MMMM", label: "úterý 8. září" },
@@ -6863,6 +6864,7 @@ const No = Xn`
   .center {
     text-align: center;
     min-width: 0;
+    color: var(--primary-text-color);
   }
 
   .time {
@@ -6906,7 +6908,7 @@ const No = Xn`
   .temp {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
     min-width: 0;
   }
 
@@ -6920,24 +6922,12 @@ const No = Xn`
     text-align: right;
   }
 
-  .temp-header {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  .temp-label {
+    font-size: 0.85em;
+    font-weight: 700;
+    line-height: 1.2;
     min-width: 0;
     max-width: 100%;
-  }
-
-  .temp.right .temp-header {
-    flex-direction: row-reverse;
-  }
-
-  .temp-label {
-    font-size: 0.8em;
-    font-weight: 600;
-    line-height: 1.25;
-    opacity: 0.8;
-    min-width: 0;
     overflow-wrap: anywhere;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -6945,27 +6935,45 @@ const No = Xn`
     overflow: hidden;
   }
 
+  .temp-reading {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .temp.right .temp-reading {
+    flex-direction: row-reverse;
+  }
+
   .temp-value {
     display: flex;
     align-items: baseline;
     gap: 2px;
+    min-width: 0;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1;
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
+    color: var(--primary-text-color);
+  }
+
+  .temp-number {
+    font-size: 1em;
   }
 
   .temp-unit {
-    font-size: 0.65em;
-    font-weight: 600;
-    opacity: 0.75;
+    font-size: 0.72em;
+    font-weight: 700;
+    /* jednotka dědí accent barvu z .temp */
   }
 
-  ha-icon {
-    --mdc-icon-size: 1.1em;
-    width: 1.1em;
-    height: 1.1em;
+  .temp ha-icon {
+    --mdc-icon-size: 1em;
+    width: 1em;
+    height: 1em;
     flex-shrink: 0;
+    color: inherit;
   }
 
   /* Velikostní varianty */
@@ -6983,8 +6991,11 @@ const No = Xn`
   :host([data-size='compact']) .significant {
     font-size: 0.8em;
   }
-  :host([data-size='compact']) .temp-value {
-    font-size: 1.1em;
+  :host([data-size='compact']) .temp-label {
+    font-size: 0.75em;
+  }
+  :host([data-size='compact']) .temp-reading {
+    font-size: 1.15em;
   }
 
   :host([data-size='normal']) .time {
@@ -6998,8 +7009,8 @@ const No = Xn`
   :host([data-size='normal']) .significant {
     font-size: 0.9em;
   }
-  :host([data-size='normal']) .temp-value {
-    font-size: 1.35em;
+  :host([data-size='normal']) .temp-reading {
+    font-size: 1.4em;
   }
 
   :host([data-size='large']) ha-card {
@@ -7016,8 +7027,11 @@ const No = Xn`
   :host([data-size='large']) .significant {
     font-size: 1.05em;
   }
-  :host([data-size='large']) .temp-value {
-    font-size: 1.6em;
+  :host([data-size='large']) .temp-label {
+    font-size: 0.95em;
+  }
+  :host([data-size='large']) .temp-reading {
+    font-size: 1.65em;
   }
 `, Io = "mdi:thermometer", Co = ["unavailable", "unknown", "none", ""];
 function Vo(t, e) {
@@ -7154,14 +7168,14 @@ let R = class extends he {
       color: t.iconColor || void 0
     });
     return B`
-      <div class="temp ${e}">
-        <div class="temp-header">
-          <ha-icon .icon=${t.icon} style=${n}></ha-icon>
-          <span class="temp-label" title=${t.label}>${t.label}</span>
-        </div>
-        <div class="temp-value">
-          <span>${t.value}</span>
-          ${t.unit ? B`<span class="temp-unit">${t.unit}</span>` : k}
+      <div class="temp ${e}" style=${n}>
+        <span class="temp-label" title=${t.label}>${t.label}</span>
+        <div class="temp-reading">
+          <ha-icon .icon=${t.icon}></ha-icon>
+          <div class="temp-value">
+            <span class="temp-number">${t.value}</span>
+            ${t.unit ? B`<span class="temp-unit">${t.unit}</span>` : k}
+          </div>
         </div>
       </div>
     `;

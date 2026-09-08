@@ -196,18 +196,20 @@ export class EkDigitalClock extends LitElement {
     if (!temp) {
       return html`<div class="temp ${side}"></div>`;
     }
-    const iconStyle = styleMap({
+    const accentStyle = styleMap({
       color: temp.iconColor || undefined,
     });
     return html`
-      <div class="temp ${side}">
-        <div class="temp-header">
-          <ha-icon .icon=${temp.icon} style=${iconStyle}></ha-icon>
-          <span class="temp-label" title=${temp.label}>${temp.label}</span>
-        </div>
-        <div class="temp-value">
-          <span>${temp.value}</span>
-          ${temp.unit ? html`<span class="temp-unit">${temp.unit}</span>` : nothing}
+      <div class="temp ${side}" style=${accentStyle}>
+        <span class="temp-label" title=${temp.label}>${temp.label}</span>
+        <div class="temp-reading">
+          <ha-icon .icon=${temp.icon}></ha-icon>
+          <div class="temp-value">
+            <span class="temp-number">${temp.value}</span>
+            ${temp.unit
+              ? html`<span class="temp-unit">${temp.unit}</span>`
+              : nothing}
+          </div>
         </div>
       </div>
     `;
