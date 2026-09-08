@@ -794,7 +794,7 @@ function ir(t) {
   const n = e.length === 4 ? `#${e[1]}${e[1]}${e[2]}${e[2]}${e[3]}${e[3]}` : e, s = parseInt(n.slice(1, 3), 16), i = parseInt(n.slice(3, 5), 16), r = parseInt(n.slice(5, 7), 16);
   return `${s}, ${i}, ${r}`;
 }
-const rr = "1.0.4", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
+const rr = "1.0.5", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
 class re extends Error {
 }
 class lr extends re {
@@ -7002,10 +7002,10 @@ const No = Xn`
     font-size: 0.8em;
   }
   :host([data-size='compact']) .temp-label {
-    font-size: 0.75em;
+    font-size: 0.8em;
   }
   :host([data-size='compact']) .temp-reading {
-    font-size: 1.15em;
+    font-size: 1.3em;
   }
 
   :host([data-size='normal']) .time {
@@ -7019,8 +7019,11 @@ const No = Xn`
   :host([data-size='normal']) .significant {
     font-size: 0.9em;
   }
+  :host([data-size='normal']) .temp-label {
+    font-size: 0.95em;
+  }
   :host([data-size='normal']) .temp-reading {
-    font-size: 1.4em;
+    font-size: 1.65em;
   }
 
   :host([data-size='large']) ha-card {
@@ -7038,10 +7041,10 @@ const No = Xn`
     font-size: 1.05em;
   }
   :host([data-size='large']) .temp-label {
-    font-size: 0.95em;
+    font-size: 1.05em;
   }
   :host([data-size='large']) .temp-reading {
-    font-size: 1.65em;
+    font-size: 1.9em;
   }
 `, Io = "mdi:thermometer", Co = ["unavailable", "unknown", "none", ""];
 function Vo(t, e) {

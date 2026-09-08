@@ -177,10 +177,10 @@ export const cardStyles = css`
     font-size: 0.8em;
   }
   :host([data-size='compact']) .temp-label {
-    font-size: 0.75em;
+    font-size: 0.8em;
   }
   :host([data-size='compact']) .temp-reading {
-    font-size: 1.15em;
+    font-size: 1.3em;
   }
 
   :host([data-size='normal']) .time {
@@ -194,8 +194,11 @@ export const cardStyles = css`
   :host([data-size='normal']) .significant {
     font-size: 0.9em;
   }
+  :host([data-size='normal']) .temp-label {
+    font-size: 0.95em;
+  }
   :host([data-size='normal']) .temp-reading {
-    font-size: 1.4em;
+    font-size: 1.65em;
   }
 
   :host([data-size='large']) ha-card {
@@ -213,9 +216,9 @@ export const cardStyles = css`
     font-size: 1.05em;
   }
   :host([data-size='large']) .temp-label {
-    font-size: 0.95em;
+    font-size: 1.05em;
   }
   :host([data-size='large']) .temp-reading {
-    font-size: 1.65em;
+    font-size: 1.9em;
   }
 `;
