@@ -8,6 +8,23 @@ import type { EkDigitalClockConfig, TemperatureSlotConfig } from './types';
 
 type HaFormSchema = Record<string, unknown>;
 
+function readText(value: unknown): string {
+  return typeof value === 'string' ? value : value == null ? '' : String(value);
+}
+
+/**
+ * Hodnotu ukládá bez trimu — trim během psaní požíral mezery
+ * v popiscích (uživatel nemohl napsat "Aktuální teplota").
+ */
+function setOrDelete(target: object, key: string, value: string): void {
+  const record = target as Record<string, unknown>;
+  if (value.trim()) {
+    record[key] = value;
+  } else {
+    delete record[key];
+  }
+}
+
 @customElement(`${CARD_TYPE}-editor`)
 export class EkDigitalClockEditor extends LitElement implements LovelaceCardEditor {
   @property({ attribute: false }) public hass?: HomeAssistant;
@@ -55,11 +72,15 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       left_icon: c.left_temperature?.icon ?? 'mdi:home-thermometer',
       left_icon_color: c.left_temperature?.icon_color ?? '',
       left_precision: c.left_temperature?.precision ?? 1,
+      left_unit: c.left_temperature?.unit ?? '',
+      left_show_unit: c.left_temperature?.show_unit ?? true,
       right_entity: c.right_temperature?.entity ?? '',
       right_name: c.right_temperature?.name ?? '',
       right_icon: c.right_temperature?.icon ?? 'mdi:thermometer',
       right_icon_color: c.right_temperature?.icon_color ?? '',
       right_precision: c.right_temperature?.precision ?? 1,
+      right_unit: c.right_temperature?.unit ?? '',
+      right_show_unit: c.right_temperature?.show_unit ?? true,
       tap_action: c.tap_action ?? { action: 'none' },
       hold_action: c.hold_action ?? { action: 'none' },
       double_tap_action: c.double_tap_action ?? { action: 'none' },
@@ -131,13 +152,19 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
               },
             },
           },
-          { name: 'theme', selector: { theme: {} } },
+          { name: 'theme', selector: { theme: { include_default: true } } },
           {
             type: 'grid',
             name: '',
             schema: [
-              { name: 'background_color', selector: { text: {} } },
-              { name: 'text_color', selector: { text: {} } },
+              {
+                name: 'background_color',
+                selector: { ui_color: { include_none: true } },
+              },
+              {
+                name: 'text_color',
+                selector: { ui_color: { include_none: true } },
+              },
             ],
           },
         ],
@@ -165,12 +192,29 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
             selector: { entity: { domain: 'sensor' } },
           },
           { name: 'left_name', selector: { text: {} } },
-          { name: 'left_icon', selector: { icon: {} } },
-          { name: 'left_icon_color', selector: { text: {} } },
           {
-            name: 'left_precision',
-            selector: { number: { min: 0, max: 3, mode: 'box' } },
+            type: 'grid',
+            name: '',
+            schema: [
+              { name: 'left_icon', selector: { icon: {} } },
+              {
+                name: 'left_icon_color',
+                selector: { ui_color: { include_none: true } },
+              },
+            ],
           },
+          {
+            type: 'grid',
+            name: '',
+            schema: [
+              {
+                name: 'left_precision',
+                selector: { number: { min: 0, max: 3, mode: 'box' } },
+              },
+              { name: 'left_unit', selector: { text: {} } },
+            ],
+          },
+          { name: 'left_show_unit', selector: { boolean: {} } },
         ],
       },
       {
@@ -184,12 +228,29 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
             selector: { entity: { domain: 'sensor' } },
           },
           { name: 'right_name', selector: { text: {} } },
-          { name: 'right_icon', selector: { icon: {} } },
-          { name: 'right_icon_color', selector: { text: {} } },
           {
-            name: 'right_precision',
-            selector: { number: { min: 0, max: 3, mode: 'box' } },
+            type: 'grid',
+            name: '',
+            schema: [
+              { name: 'right_icon', selector: { icon: {} } },
+              {
+                name: 'right_icon_color',
+                selector: { ui_color: { include_none: true } },
+              },
+            ],
           },
+          {
+            type: 'grid',
+            name: '',
+            schema: [
+              {
+                name: 'right_precision',
+                selector: { number: { min: 0, max: 3, mode: 'box' } },
+              },
+              { name: 'right_unit', selector: { text: {} } },
+            ],
+          },
+          { name: 'right_show_unit', selector: { boolean: {} } },
         ],
       },
       {
@@ -225,11 +286,15 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       left_icon: 'Ikona',
       left_icon_color: 'Barva ikony',
       left_precision: 'Desetinná místa',
+      left_unit: 'Jednotka (prázdné = z entity)',
+      left_show_unit: 'Zobrazit jednotku',
       right_entity: 'Entita',
       right_name: 'Popisek',
       right_icon: 'Ikona',
       right_icon_color: 'Barva ikony',
       right_precision: 'Desetinná místa',
+      right_unit: 'Jednotka (prázdné = z entity)',
+      right_show_unit: 'Zobrazit jednotku',
       tap_action: 'Klepnutí',
       hold_action: 'Podržení',
       double_tap_action: 'Dvojité klepnutí',
@@ -249,31 +314,20 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
     const next: EkDigitalClockConfig = {
       ...this._config,
       type: `custom:${CARD_TYPE}`,
-      time_format: String(data.time_format || 'HH:mm'),
-      date_format: String(data.date_format || 'cccc dd. L.'),
+      time_format: readText(data.time_format) || 'HH:mm',
+      date_format: readText(data.date_format) || 'cccc dd. L.',
       size: (data.size as EkDigitalClockConfig['size']) || 'normal',
       show_nameday: Boolean(data.show_nameday),
       show_public_holiday: Boolean(data.show_public_holiday),
       show_significant_day: Boolean(data.show_significant_day),
-      nameday_prefix: String(data.nameday_prefix || DEFAULT_NAMEDAY_PREFIX),
+      nameday_prefix: readText(data.nameday_prefix) || DEFAULT_NAMEDAY_PREFIX,
     };
 
-    const locale = String(data.locale || '').trim();
-    const timeZone = String(data.time_zone || '').trim();
-    const theme = String(data.theme || '').trim();
-    const background = String(data.background_color || '').trim();
-    const textColor = String(data.text_color || '').trim();
-
-    if (locale) next.locale = locale;
-    else delete next.locale;
-    if (timeZone) next.time_zone = timeZone;
-    else delete next.time_zone;
-    if (theme) next.theme = theme;
-    else delete next.theme;
-    if (background) next.background_color = background;
-    else delete next.background_color;
-    if (textColor) next.text_color = textColor;
-    else delete next.text_color;
+    setOrDelete(next, 'locale', readText(data.locale));
+    setOrDelete(next, 'time_zone', readText(data.time_zone));
+    setOrDelete(next, 'theme', readText(data.theme));
+    setOrDelete(next, 'background_color', readText(data.background_color));
+    setOrDelete(next, 'text_color', readText(data.text_color));
 
     next.left_temperature = this._slotFromForm(data, 'left');
     next.right_temperature = this._slotFromForm(data, 'right');
@@ -325,19 +379,29 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
     data: Record<string, unknown>,
     side: 'left' | 'right',
   ): TemperatureSlotConfig | undefined {
-    const entity = String(data[`${side}_entity`] || '').trim();
+    const entity = readText(data[`${side}_entity`]).trim();
     if (!entity) {
       return undefined;
     }
+
     const slot: TemperatureSlotConfig = { entity };
-    const name = String(data[`${side}_name`] || '').trim();
-    const icon = String(data[`${side}_icon`] || '').trim();
-    const iconColor = String(data[`${side}_icon_color`] || '').trim();
+    setOrDelete(slot, 'name', readText(data[`${side}_name`]));
+    setOrDelete(slot, 'icon', readText(data[`${side}_icon`]));
+    setOrDelete(slot, 'icon_color', readText(data[`${side}_icon_color`]));
+    setOrDelete(slot, 'unit', readText(data[`${side}_unit`]));
+
     const precision = Number(data[`${side}_precision`]);
-    if (name) slot.name = name;
-    if (icon) slot.icon = icon;
-    if (iconColor) slot.icon_color = iconColor;
-    if (!Number.isNaN(precision)) slot.precision = precision;
+    if (!Number.isNaN(precision)) {
+      slot.precision = precision;
+    }
+
+    const showUnit = data[`${side}_show_unit`];
+    if (showUnit === false) {
+      slot.show_unit = false;
+    } else {
+      delete slot.show_unit;
+    }
+
     return slot;
   }
 

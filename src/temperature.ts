@@ -1,7 +1,9 @@
 import type { HomeAssistant } from 'custom-card-helpers';
+import { computeCssColor } from './color';
 import type { FormattedTemperature, TemperatureSlotConfig } from './types';
 
 const DEFAULT_ICON = 'mdi:thermometer';
+const UNAVAILABLE_STATES = ['unavailable', 'unknown', 'none', ''];
 
 export function hasTemperatureSlots(
   left?: TemperatureSlotConfig,
@@ -22,25 +24,31 @@ export function formatTemperatureSlot(
 
   const stateObj = hass?.states?.[slot.entity];
   const raw = stateObj?.state;
-  const unit = stateObj?.attributes?.unit_of_measurement ?? '°C';
   const precision = slot.precision ?? 1;
 
   let value = '—';
-  if (raw !== undefined && raw !== 'unavailable' && raw !== 'unknown') {
+  let available = false;
+  if (raw !== undefined && !UNAVAILABLE_STATES.includes(raw)) {
     const num = Number(raw);
-    if (!Number.isNaN(num)) {
-      value = num.toFixed(precision).replace('.', ',');
-    } else {
-      value = String(raw);
-    }
+    available = true;
+    value = Number.isNaN(num)
+      ? String(raw)
+      : num.toFixed(precision).replace('.', ',');
   }
+
+  const stateUnit = stateObj?.attributes?.unit_of_measurement;
+  const configuredUnit = slot.unit?.trim();
+  const unit =
+    slot.show_unit === false || !available
+      ? ''
+      : (configuredUnit || stateUnit || '');
 
   return {
     label: slot.name || stateObj?.attributes?.friendly_name || fallbackLabel,
     value,
     unit,
     icon: slot.icon || stateObj?.attributes?.icon || fallbackIcon || DEFAULT_ICON,
-    iconColor: slot.icon_color,
+    iconColor: computeCssColor(slot.icon_color),
     entity: slot.entity,
   };
 }

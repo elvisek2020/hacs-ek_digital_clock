@@ -7,6 +7,8 @@ export const cardStyles = css`
 
   ha-card {
     height: 100%;
+    display: flex;
+    align-items: center;
     padding: 12px 16px;
     box-sizing: border-box;
     overflow: hidden;
@@ -17,16 +19,21 @@ export const cardStyles = css`
     cursor: pointer;
   }
 
+  ha-card.has-action:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: -2px;
+  }
+
   .row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    gap: 8px;
-    min-height: 100%;
+    gap: 12px;
+    width: 100%;
   }
 
   .row.no-temps {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .center {
@@ -38,8 +45,9 @@ export const cardStyles = css`
     display: block;
     font-weight: 700;
     line-height: 1.05;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
   .date {
@@ -55,9 +63,9 @@ export const cardStyles = css`
   .significant {
     display: block;
     font-weight: 500;
-    line-height: 1.25;
-    margin-top: 4px;
-    opacity: 0.9;
+    line-height: 1.3;
+    margin-top: 3px;
+    opacity: 0.85;
   }
 
   .holiday {
@@ -68,17 +76,14 @@ export const cardStyles = css`
 
   .significant {
     font-style: italic;
-    opacity: 0.85;
+    opacity: 0.8;
   }
 
   .temp {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     gap: 2px;
     min-width: 0;
-    text-align: center;
   }
 
   .temp.left {
@@ -94,8 +99,9 @@ export const cardStyles = css`
   .temp-header {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 5px;
     min-width: 0;
+    max-width: 100%;
   }
 
   .temp.right .temp-header {
@@ -103,17 +109,22 @@ export const cardStyles = css`
   }
 
   .temp-label {
-    font-size: 0.85em;
+    font-size: 0.8em;
     font-weight: 600;
-    opacity: 0.85;
-    white-space: nowrap;
+    line-height: 1.25;
+    opacity: 0.8;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
   }
 
   .temp-value {
-    font-size: 1.35em;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
     font-weight: 700;
     line-height: 1.1;
     font-variant-numeric: tabular-nums;
@@ -121,59 +132,67 @@ export const cardStyles = css`
   }
 
   .temp-unit {
-    font-size: 0.7em;
+    font-size: 0.65em;
     font-weight: 600;
-    opacity: 0.8;
-    margin-left: 2px;
+    opacity: 0.75;
   }
 
   ha-icon {
-    --mdc-icon-size: 1.15em;
-    width: 1.15em;
-    height: 1.15em;
+    --mdc-icon-size: 1.1em;
+    width: 1.1em;
+    height: 1.1em;
     flex-shrink: 0;
   }
 
-  /* Size variants */
+  /* Velikostní varianty */
+  :host([data-size='compact']) ha-card {
+    padding: 8px 12px;
+  }
   :host([data-size='compact']) .time {
-    font-size: 2.1em;
+    font-size: 2em;
   }
   :host([data-size='compact']) .date {
-    font-size: 1.05em;
+    font-size: 1em;
   }
   :host([data-size='compact']) .nameday,
   :host([data-size='compact']) .holiday,
   :host([data-size='compact']) .significant {
-    font-size: 0.85em;
+    font-size: 0.8em;
   }
   :host([data-size='compact']) .temp-value {
-    font-size: 1.15em;
+    font-size: 1.1em;
   }
 
   :host([data-size='normal']) .time {
-    font-size: 2.8em;
+    font-size: 2.7em;
   }
   :host([data-size='normal']) .date {
-    font-size: 1.35em;
+    font-size: 1.3em;
   }
   :host([data-size='normal']) .nameday,
   :host([data-size='normal']) .holiday,
   :host([data-size='normal']) .significant {
-    font-size: 0.95em;
+    font-size: 0.9em;
+  }
+  :host([data-size='normal']) .temp-value {
+    font-size: 1.35em;
   }
 
+  :host([data-size='large']) ha-card {
+    padding: 16px 20px;
+  }
   :host([data-size='large']) .time {
     font-size: 3.4em;
   }
   :host([data-size='large']) .date {
-    font-size: 1.6em;
+    font-size: 1.55em;
   }
   :host([data-size='large']) .nameday,
   :host([data-size='large']) .holiday,
   :host([data-size='large']) .significant {
-    font-size: 1.1em;
+    font-size: 1.05em;
   }
   :host([data-size='large']) .temp-value {
-    font-size: 1.55em;
+    font-size: 1.6em;
   }
 `;

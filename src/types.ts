@@ -8,6 +8,8 @@ export interface TemperatureSlotConfig {
   icon?: string;
   icon_color?: string;
   precision?: number;
+  unit?: string;
+  show_unit?: boolean;
 }
 
 export interface EkDigitalClockConfig extends LovelaceCardConfig {

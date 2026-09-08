@@ -2,7 +2,6 @@ import { LitElement, html, nothing, type PropertyValues, type TemplateResult } f
 import { customElement, property, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import {
-  applyThemesOnElement,
   handleAction,
   hasAction,
   type ActionHandlerEvent,
@@ -10,6 +9,8 @@ import {
 } from 'custom-card-helpers';
 
 import { actionHandler } from './action-handler';
+import { computeCssColor } from './color';
+import { applyTheme } from './theme';
 import {
   CARD_DESCRIPTION,
   CARD_NAME,
@@ -63,7 +64,7 @@ export class EkDigitalClock extends LitElement {
   @state() private _holiday: string | null = null;
   @state() private _significant: string | null = null;
 
-  private _intervalId?: number;
+  private _tickId?: number;
 
   public static async getConfigElement(): Promise<HTMLElement> {
     await import('./editor');
@@ -87,7 +88,7 @@ export class EkDigitalClock extends LitElement {
     }
     this._config = { ...config };
     this._updateDateTime();
-    this._restartInterval();
+    this._scheduleTick();
   }
 
   public getCardSize(): number {
@@ -105,11 +106,11 @@ export class EkDigitalClock extends LitElement {
 
   public connectedCallback(): void {
     super.connectedCallback();
-    this._restartInterval();
+    this._scheduleTick();
   }
 
   public disconnectedCallback(): void {
-    this._stopInterval();
+    this._stopTick();
     super.disconnectedCallback();
   }
 
@@ -117,20 +118,10 @@ export class EkDigitalClock extends LitElement {
     if (changed.has('_config') || changed.has('hass')) {
       this._updateDateTime();
     }
-    const size = this._config?.size || 'normal';
-    this.setAttribute('data-size', size);
+    this.setAttribute('data-size', this._config?.size || 'normal');
 
-    if (this.hass && this._config && (changed.has('_config') || changed.has('hass'))) {
-      const selected = this.hass.selectedTheme;
-      const selectedName =
-        typeof selected === 'string'
-          ? selected
-          : (selected as { theme?: string } | null | undefined)?.theme;
-      applyThemesOnElement(
-        this,
-        this.hass.themes,
-        this._config.theme || selectedName || 'default',
-      );
+    if (changed.has('_config') || changed.has('hass')) {
+      applyTheme(this, this.hass, this._config?.theme);
     }
   }
 
@@ -162,8 +153,8 @@ export class EkDigitalClock extends LitElement {
       hasAction(this._config.double_tap_action);
 
     const cardStyle = styleMap({
-      background: this._config.background_color || undefined,
-      color: this._config.text_color || undefined,
+      background: computeCssColor(this._config.background_color),
+      color: computeCssColor(this._config.text_color),
     });
 
     return html`
@@ -212,10 +203,11 @@ export class EkDigitalClock extends LitElement {
       <div class="temp ${side}">
         <div class="temp-header">
           <ha-icon .icon=${temp.icon} style=${iconStyle}></ha-icon>
-          <span class="temp-label">${temp.label}</span>
+          <span class="temp-label" title=${temp.label}>${temp.label}</span>
         </div>
         <div class="temp-value">
-          ${temp.value}<span class="temp-unit">${temp.unit}</span>
+          <span>${temp.value}</span>
+          ${temp.unit ? html`<span class="temp-unit">${temp.unit}</span>` : nothing}
         </div>
       </div>
     `;
@@ -253,17 +245,24 @@ export class EkDigitalClock extends LitElement {
       : null;
   }
 
-  private _restartInterval(): void {
-    this._stopInterval();
-    const ms = formatNeedsSeconds(this._config?.time_format) ? 1000 : 15000;
-    this._intervalId = window.setInterval(() => this._updateDateTime(), ms);
-    this._updateDateTime();
+  /** Tick zarovnaný na hranici sekundy/minuty, ať se čas nepřepíná se zpožděním. */
+  private _scheduleTick(): void {
+    this._stopTick();
+    if (!this._config) {
+      return;
+    }
+    const period = formatNeedsSeconds(this._config.time_format) ? 1000 : 60000;
+    const delay = period - (Date.now() % period) + 20;
+    this._tickId = window.setTimeout(() => {
+      this._updateDateTime();
+      this._scheduleTick();
+    }, delay);
   }
 
-  private _stopInterval(): void {
-    if (this._intervalId !== undefined) {
-      window.clearInterval(this._intervalId);
-      this._intervalId = undefined;
+  private _stopTick(): void {
+    if (this._tickId !== undefined) {
+      window.clearTimeout(this._tickId);
+      this._tickId = undefined;
     }
   }
 

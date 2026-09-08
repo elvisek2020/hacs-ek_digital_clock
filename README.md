@@ -65,15 +65,17 @@ show_significant_day: false
 size: normal
 left_temperature:
   entity: sensor.venkovni_teplota
-  name: Venkovní
+  name: Venkovní teplota
   icon: mdi:home-thermometer
-  icon_color: '#e53935'
+  icon_color: red
   precision: 1
 right_temperature:
   entity: sensor.teplota_obyvak
   name: Obývák
   icon: mdi:thermometer
-  icon_color: '#e53935'
+  icon_color: red
+  unit: °C
+  show_unit: true
 tap_action:
   action: navigate
   navigation_path: /lovelace/kalendar
@@ -88,11 +90,14 @@ tap_action:
 | `show_nameday` | Jmeniny pod datem |
 | `show_public_holiday` | Státní svátek (jen když dnes je) |
 | `show_significant_day` | Významný den |
-| `left_temperature` / `right_temperature` | Slot: `entity`, `name`, `icon`, `icon_color`, `precision` |
-| `background_color` / `text_color` | CSS barvy |
-| `theme` | HA motiv |
+| `left_temperature` / `right_temperature` | Slot: `entity`, `name`, `icon`, `icon_color`, `precision`, `unit`, `show_unit` |
+| `background_color` / `text_color` | Barva — název HA barvy (`red`, `primary`) nebo CSS (`#e53935`) |
+| `theme` | HA motiv (respektuje light/dark varianty motivu) |
 | `size` | `compact` \| `normal` \| `large` |
 | `tap_action` / `hold_action` / `double_tap_action` | Standardní HA akce |
+
+Jednotka se bere z entity (`unit_of_measurement`). Pokud ji entita nemá,
+nastav `unit` ručně; `show_unit: false` ji skryje.
 
 ## Verze a release
 
