@@ -1,0 +1,6 @@
+{
+  "name": "Ek Digital Clock",
+  "filename": "ek-digital-clock.js",
+  "render_readme": true,
+  "homeassistant": "2024.1.0"
+}

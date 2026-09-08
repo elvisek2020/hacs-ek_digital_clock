@@ -1,0 +1,11 @@
+node_modules/
+*.log
+.DS_Store
+.idea/
+.vscode/
+*.tsbuildinfo
+dist/*.map
+
+# Lokální pomocné adresáře – nikdy necommitovat
+_backup/
+_docs/

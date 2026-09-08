@@ -1,0 +1,40 @@
+{
+  "name": "ek-digital-clock",
+  "version": "1.0.0",
+  "description": "Modern digital clock Lovelace card for Home Assistant with namedays, holidays and temperatures",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elvisek2020/hacs-ek_digital_clock.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elvisek2020/hacs-ek_digital_clock/issues"
+  },
+  "homepage": "https://github.com/elvisek2020/hacs-ek_digital_clock#readme",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "home-assistant",
+    "hacs",
+    "lovelace",
+    "custom-card",
+    "digital-clock"
+  ],
+  "author": "ElvisEK",
+  "license": "MIT",
+  "dependencies": {
+    "custom-card-helpers": "^1.9.0",
+    "holidays-cs": "^2.0.0",
+    "lit": "^3.2.1",
+    "luxon": "^3.5.0",
+    "namedays-cs": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.4.2",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}
