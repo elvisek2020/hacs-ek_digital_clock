@@ -111,10 +111,11 @@ export const cardStyles = css`
   }
 
   .temp-reading {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     min-width: 0;
+    line-height: 1;
   }
 
   .temp.right .temp-reading {
@@ -122,8 +123,8 @@ export const cardStyles = css`
   }
 
   .temp-value {
-    display: flex;
-    align-items: baseline;
+    display: inline-flex;
+    align-items: center;
     gap: 2px;
     min-width: 0;
     font-weight: 700;
@@ -135,20 +136,29 @@ export const cardStyles = css`
 
   .temp-number {
     font-size: 1em;
+    line-height: 1;
   }
 
   .temp-unit {
     font-size: 0.72em;
     font-weight: 700;
-    /* jednotka dědí accent barvu z .temp */
+    line-height: 1;
   }
 
   .temp ha-icon {
-    --mdc-icon-size: 1em;
+    --mdc-icon-size: 0.92em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 1em;
     height: 1em;
+    margin: 0;
+    padding: 0;
     flex-shrink: 0;
+    line-height: 0;
     color: inherit;
+    /* MDI glyfy sedí opticky níž než číslice — drobný posun nahoru */
+    transform: translateY(-0.06em);
   }
 
   /* Velikostní varianty */

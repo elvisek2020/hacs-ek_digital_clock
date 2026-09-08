@@ -794,7 +794,7 @@ function ir(t) {
   const n = e.length === 4 ? `#${e[1]}${e[1]}${e[2]}${e[2]}${e[3]}${e[3]}` : e, s = parseInt(n.slice(1, 3), 16), i = parseInt(n.slice(3, 5), 16), r = parseInt(n.slice(5, 7), 16);
   return `${s}, ${i}, ${r}`;
 }
-const rr = "1.0.3", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
+const rr = "1.0.4", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
 class re extends Error {
 }
 class lr extends re {
@@ -6936,10 +6936,11 @@ const No = Xn`
   }
 
   .temp-reading {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     min-width: 0;
+    line-height: 1;
   }
 
   .temp.right .temp-reading {
@@ -6947,8 +6948,8 @@ const No = Xn`
   }
 
   .temp-value {
-    display: flex;
-    align-items: baseline;
+    display: inline-flex;
+    align-items: center;
     gap: 2px;
     min-width: 0;
     font-weight: 700;
@@ -6960,20 +6961,29 @@ const No = Xn`
 
   .temp-number {
     font-size: 1em;
+    line-height: 1;
   }
 
   .temp-unit {
     font-size: 0.72em;
     font-weight: 700;
-    /* jednotka dědí accent barvu z .temp */
+    line-height: 1;
   }
 
   .temp ha-icon {
-    --mdc-icon-size: 1em;
+    --mdc-icon-size: 0.92em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 1em;
     height: 1em;
+    margin: 0;
+    padding: 0;
     flex-shrink: 0;
+    line-height: 0;
     color: inherit;
+    /* MDI glyfy sedí opticky níž než číslice — drobný posun nahoru */
+    transform: translateY(-0.06em);
   }
 
   /* Velikostní varianty */
