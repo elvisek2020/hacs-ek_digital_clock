@@ -785,7 +785,7 @@ class Qi extends ss {
     return R;
   }
 }
-const Xi = ns(Qi), er = "1.0.0", We = "ek-digital-clock", as = "Ek Digital Clock", tr = "Digitální hodiny s jmeninami, státními svátky a teplotami", os = "HH:mm", nr = "cccc dd. L.", bt = "Svátek:";
+const Xi = ns(Qi), er = "1.0.1", We = "ek-digital-clock", as = "Ek Digital Clock", tr = "Digitální hodiny s jmeninami, státními svátky a teplotami", os = "HH:mm", nr = "cccc dd. L.", bt = "Svátek:";
 class se extends Error {
 }
 class sr extends se {
@@ -7274,6 +7274,7 @@ let ye = class extends ce {
       {
         name: "time_date",
         type: "expandable",
+        flatten: !0,
         title: "Čas a datum",
         schema: [
           {
@@ -7315,6 +7316,7 @@ let ye = class extends ce {
       {
         name: "appearance",
         type: "expandable",
+        flatten: !0,
         title: "Vzhled",
         schema: [
           {
@@ -7344,6 +7346,7 @@ let ye = class extends ce {
       {
         name: "calendar",
         type: "expandable",
+        flatten: !0,
         title: "Kalendář (jmeniny / svátky)",
         schema: [
           { name: "show_nameday", selector: { boolean: {} } },
@@ -7355,6 +7358,7 @@ let ye = class extends ce {
       {
         name: "left_temp",
         type: "expandable",
+        flatten: !0,
         title: "Levá teplota",
         schema: [
           {
@@ -7373,6 +7377,7 @@ let ye = class extends ce {
       {
         name: "right_temp",
         type: "expandable",
+        flatten: !0,
         title: "Pravá teplota",
         schema: [
           {
@@ -7391,6 +7396,7 @@ let ye = class extends ce {
       {
         name: "actions",
         type: "expandable",
+        flatten: !0,
         title: "Akce",
         schema: [
           { name: "tap_action", selector: { ui_action: {} } },
@@ -7403,7 +7409,7 @@ let ye = class extends ce {
   _valueChanged(n) {
     if (n.stopPropagation(), !this._config || !this.hass)
       return;
-    const e = n.detail.value, t = {
+    const e = this._flattenFormValue(n.detail.value), t = {
       ...this._config,
       type: `custom:${We}`,
       time_format: String(e.time_format || "HH:mm"),
@@ -7415,6 +7421,21 @@ let ye = class extends ce {
       nameday_prefix: String(e.nameday_prefix || bt)
     }, s = String(e.locale || "").trim(), i = String(e.time_zone || "").trim(), r = String(e.theme || "").trim(), a = String(e.background_color || "").trim(), o = String(e.text_color || "").trim();
     s ? t.locale = s : delete t.locale, i ? t.time_zone = i : delete t.time_zone, r ? t.theme = r : delete t.theme, a ? t.background_color = a : delete t.background_color, o ? t.text_color = o : delete t.text_color, t.left_temperature = this._slotFromForm(e, "left"), t.right_temperature = this._slotFromForm(e, "right"), t.left_temperature || delete t.left_temperature, t.right_temperature || delete t.right_temperature, this._assignAction(t, "tap_action", e.tap_action), this._assignAction(t, "hold_action", e.hold_action), this._assignAction(t, "double_tap_action", e.double_tap_action), this._config = t, ze(this, "config-changed", { config: t });
+  }
+  _flattenFormValue(n) {
+    const e = [
+      "time_date",
+      "appearance",
+      "calendar",
+      "left_temp",
+      "right_temp",
+      "actions"
+    ], t = { ...n };
+    for (const s of e) {
+      const i = n[s];
+      i && typeof i == "object" && !Array.isArray(i) && (Object.assign(t, i), delete t[s]);
+    }
+    return t;
   }
   _assignAction(n, e, t) {
     const s = t;

@@ -67,10 +67,13 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
   }
 
   private _schema(): HaFormSchema[] {
+    // flatten: true je nutný — bez něj ha-form nestuje data pod name expandable
+    // a hodnoty se v editoru neuloží / nezobrazí.
     return [
       {
         name: 'time_date',
         type: 'expandable',
+        flatten: true,
         title: 'Čas a datum',
         schema: [
           {
@@ -112,6 +115,7 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       {
         name: 'appearance',
         type: 'expandable',
+        flatten: true,
         title: 'Vzhled',
         schema: [
           {
@@ -141,6 +145,7 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       {
         name: 'calendar',
         type: 'expandable',
+        flatten: true,
         title: 'Kalendář (jmeniny / svátky)',
         schema: [
           { name: 'show_nameday', selector: { boolean: {} } },
@@ -152,6 +157,7 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       {
         name: 'left_temp',
         type: 'expandable',
+        flatten: true,
         title: 'Levá teplota',
         schema: [
           {
@@ -170,6 +176,7 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       {
         name: 'right_temp',
         type: 'expandable',
+        flatten: true,
         title: 'Pravá teplota',
         schema: [
           {
@@ -188,6 +195,7 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       {
         name: 'actions',
         type: 'expandable',
+        flatten: true,
         title: 'Akce',
         schema: [
           { name: 'tap_action', selector: { ui_action: {} } },
@@ -235,7 +243,9 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
       return;
     }
 
-    const data = ev.detail.value as Record<string, unknown>;
+    // Defenzivně zplošti nested expandable objekty (starší HA / bez flatten)
+    const data = this._flattenFormValue(ev.detail.value as Record<string, unknown>);
+
     const next: EkDigitalClockConfig = {
       ...this._config,
       type: `custom:${CARD_TYPE}`,
@@ -276,6 +286,26 @@ export class EkDigitalClockEditor extends LitElement implements LovelaceCardEdit
 
     this._config = next;
     fireEvent(this, 'config-changed', { config: next });
+  }
+
+  private _flattenFormValue(raw: Record<string, unknown>): Record<string, unknown> {
+    const nestedKeys = [
+      'time_date',
+      'appearance',
+      'calendar',
+      'left_temp',
+      'right_temp',
+      'actions',
+    ];
+    const out: Record<string, unknown> = { ...raw };
+    for (const key of nestedKeys) {
+      const nested = raw[key];
+      if (nested && typeof nested === 'object' && !Array.isArray(nested)) {
+        Object.assign(out, nested as Record<string, unknown>);
+        delete out[key];
+      }
+    }
+    return out;
   }
 
   private _assignAction(
