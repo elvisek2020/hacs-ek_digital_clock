@@ -10,21 +10,14 @@
 Moderní digitální hodiny pro dashboard Home Assistantu s jmeninami, státními svátky
 a teplotami po stranách. Všechno se nastaví v grafickém editoru, YAML není potřeba.
 
+![Ek Digital Clock — náhled](docs/preview.png)
+
 - Digitální čas a datum (Luxon formáty + předvolby v editoru)
 - České **jmeniny** (`namedays-cs`, offline v bundle)
 - České **státní svátky** a volitelné **významné dny** (`holidays-cs`, offline)
 - Volitelné **teploty** vlevo/vpravo (entita, popisek, ikona, barva)
 - `tap_action` / `hold_action` / `double_tap_action`
 - Motiv HA, vlastní barva pozadí/textu, velikost karty
-
-```text
-┌───────────────┬──────────────────────────┬───────────────┐
-│ 🏠 Venkovní   │         18:38            │ 🌡 Obývák     │
-│    28,4 °C    │    úterý 08. 9.          │    22,9 °C    │
-│               │   Svátek: Elvis          │               │
-│               │   Den české státnosti    │               │
-└───────────────┴──────────────────────────┴───────────────┘
-```
 
 Bez teplotních entit zůstane klasický vycentrovaný digi clock.
 
