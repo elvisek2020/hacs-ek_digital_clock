@@ -794,7 +794,7 @@ function ir(t) {
   const n = e.length === 4 ? `#${e[1]}${e[1]}${e[2]}${e[2]}${e[3]}${e[3]}` : e, s = parseInt(n.slice(1, 3), 16), i = parseInt(n.slice(3, 5), 16), r = parseInt(n.slice(5, 7), 16);
   return `${s}, ${i}, ${r}`;
 }
-const rr = "1.0.5", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
+const rr = "1.0.6", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
 class re extends Error {
 }
 class lr extends re {
