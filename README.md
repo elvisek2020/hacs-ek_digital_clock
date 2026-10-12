@@ -1,16 +1,14 @@
 # Ek Digital Clock
 
-Moderní digitální hodiny pro Home Assistant (Lovelace) s UI konfigurací — bez nutnosti psát YAML.
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![Release](https://img.shields.io/github/v/release/elvisek2020/hacs-ek_digital_clock)](https://github.com/elvisek2020/hacs-ek_digital_clock/releases)
+[![Validate](https://github.com/elvisek2020/hacs-ek_digital_clock/actions/workflows/validate.yml/badge.svg)](https://github.com/elvisek2020/hacs-ek_digital_clock/actions/workflows/validate.yml)
+[![Licence](https://img.shields.io/github/license/elvisek2020/hacs-ek_digital_clock)](LICENSE)
 
-[![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-[![GitHub release](https://img.shields.io/github/release/elvisek2020/hacs-ek_digital_clock.svg)](https://github.com/elvisek2020/hacs-ek_digital_clock/releases)
-[![License](https://img.shields.io/github/license/elvisek2020/hacs-ek_digital_clock.svg)](LICENSE)
+[![Otevřít v HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=elvisek2020&repository=hacs-ek_digital_clock&category=plugin)
 
-Inspirováno [wassy92x/lovelace-digital-clock](https://github.com/wassy92x/lovelace-digital-clock), přepsáno od nuly pro aktuální HA (Lit 3, Sections view, tap/hold akce).
-
-**Repo:** https://github.com/elvisek2020/hacs-ek_digital_clock
-
-## Funkce
+Moderní digitální hodiny pro dashboard Home Assistantu s jmeninami, státními svátky
+a teplotami po stranách. Všechno se nastaví v grafickém editoru, YAML není potřeba.
 
 - Digitální čas a datum (Luxon formáty + předvolby v editoru)
 - České **jmeniny** (`namedays-cs`, offline v bundle)
@@ -18,8 +16,6 @@ Inspirováno [wassy92x/lovelace-digital-clock](https://github.com/wassy92x/lovel
 - Volitelné **teploty** vlevo/vpravo (entita, popisek, ikona, barva)
 - `tap_action` / `hold_action` / `double_tap_action`
 - Motiv HA, vlastní barva pozadí/textu, velikost karty
-
-## Layout
 
 ```text
 ┌───────────────┬──────────────────────────┬───────────────┐
@@ -30,25 +26,31 @@ Inspirováno [wassy92x/lovelace-digital-clock](https://github.com/wassy92x/lovel
 └───────────────┴──────────────────────────┴───────────────┘
 ```
 
-Bez teplotních entit zůstane klasický centrovovaný digi clock.
+Bez teplotních entit zůstane klasický vycentrovaný digi clock.
 
-## Instalace (HACS)
+## Předpoklady a závislosti
 
-1. HACS → **Frontend** → ⋮ → **Custom repositories**
-2. Repository: `https://github.com/elvisek2020/hacs-ek_digital_clock`
-3. Category: **Lovelace**
-4. Nainstaluj **Ek Digital Clock**
-5. Restartuj Home Assistant (nebo znovu načti zdroje / hard refresh prohlížeče)
-6. Dashboard → **Přidat kartu** → Ek Digital Clock → nastav v UI
+- Home Assistant 2024.1 nebo novější.
+- Pro teploty po stranách libovolné senzory teploty (`sensor.*`). Bez nich karta ukazuje jen čas a datum.
+- Jmeniny a svátky jsou přímo v kartě, žádná další integrace ani přístup na internet nejsou potřeba.
 
-> HACS stahuje `ek-digital-clock.js` z GitHub Release (asset musí odpovídat `hacs.json` → `filename`).
+## Instalace
 
-### Manuální instalace
+### HACS (doporučeno)
 
-1. Stáhni `ek-digital-clock.js` z [Releases](https://github.com/elvisek2020/hacs-ek_digital_clock/releases)
-2. Zkopíruj do `/config/www/`
-3. Nastavení → Dashboards → Resources → `/local/ek-digital-clock.js` (**JavaScript module**)
-4. Přidej kartu přes UI: `custom:ek-digital-clock`
+1. HACS → tři tečky vpravo nahoře → **Custom repositories**
+2. Vlož URL `https://github.com/elvisek2020/hacs-ek_digital_clock`, kategorie **Dashboard**
+3. Nainstaluj **Ek Digital Clock**
+4. Obnov stránku prohlížeče bez cache.
+5. Dashboard → **Přidat kartu** → Ek Digital Clock → nastav v UI
+
+HACS nabízí aktualizace z GitHub releases.
+
+### Ručně
+
+1. Stáhni `ek-digital-clock.js` z posledního [release](https://github.com/elvisek2020/hacs-ek_digital_clock/releases) do `/config/www/`
+2. Nastavení → Dashboards → Resources → `/local/ek-digital-clock.js` (**JavaScript module**)
+3. Přidej kartu přes UI: `custom:ek-digital-clock`
 
 ## Konfigurace
 
@@ -88,6 +90,7 @@ tap_action:
 | `time_format` / `date_format` | Luxon `toFormat` string |
 | `locale` / `time_zone` | Override HA locale / zóny |
 | `show_nameday` | Jmeniny pod datem |
+| `nameday_prefix` | Text před jmeninami (výchozí `Svátek:`) |
 | `show_public_holiday` | Státní svátek (jen když dnes je) |
 | `show_significant_day` | Významný den |
 | `left_temperature` / `right_temperature` | Slot: `entity`, `name`, `icon`, `icon_color`, `precision`, `unit`, `show_unit` |
@@ -99,35 +102,34 @@ tap_action:
 Jednotka se bere z entity (`unit_of_measurement`). Pokud ji entita nemá,
 nastav `unit` ručně; `show_unit: false` ji skryje.
 
-## Verze a release
-
-- Verze v `package.json` a `src/const.ts` (`CARD_VERSION`)
-- Git tag `vX.Y.Z` spustí GitHub Action, která sestaví bundle a nahraje `ek-digital-clock.js` do Release (to HACS potřebuje)
-
-```bash
-npm run build
-git tag v1.0.1
-git push origin v1.0.1
-```
-
 ## Vývoj
 
 ```bash
 npm install
+npm run typecheck
 npm run build
 ```
 
-Výstup: `dist/ek-digital-clock.js`
+Výstup: `dist/ek-digital-clock.js`. Pro testování v HA ho zkopíruj do `/config/www/`
+a resource načti s `?v=…`, ať prohlížeč nepoužije starou verzi z cache.
 
-## Backlog
+## Vydání verze
 
-- Slovenské jmeniny / svátky
-- Dynamická ikona z weather entity
-- Blikající dvojtečka
-- Druhá časová zóna
-- Vlhkost vedle teploty
-- Highlight „moje jména“
+1. Zvedni verzi v `package.json` a v `src/const.ts` (`CARD_VERSION`) (SemVer).
+2. Doplň sekci `## vX.Y.Z — RRRR-MM-DD` do `CHANGELOG.md`.
+3. Commit `Release vX.Y.Z: …`, `git tag vX.Y.Z`, push commitu i tagu.
+4. GitHub Actions sestaví `ek-digital-clock.js`, vytvoří release s textem z CHANGELOG a HACS nabídne aktualizaci.
 
-## Licence
+## Známá omezení
 
-MIT
+- Jmeniny a svátky jsou jen české.
+- Popisky teplot uložené ve verzi 1.0.1 a starší mohou mít ztracené mezery. Stačí je v editoru přepsat.
+- Barva zadaná jako hex (`#e53935`) funguje, ale výběr barvy v editoru ji nezobrazí jako vybranou.
+- Bundle má kolem 250 KB, protože obsahuje Luxon a kalendářní data.
+
+## Autor
+
+**[elvisek2020](https://github.com/elvisek2020)** — inspirováno kartou
+[wassy92x/lovelace-digital-clock](https://github.com/wassy92x/lovelace-digital-clock),
+přepsáno od nuly pro aktuální Home Assistant (Lit 3, Sections view, tap/hold akce,
+jmeniny a svátky). Licence MIT.

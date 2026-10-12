@@ -3,35 +3,40 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
 
 jobs:
   release:
+    name: Build & publish release asset
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: 24
           cache: npm
-
-      - name: Install and build
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm run build
+      # Text vydání = sekce „## <tag>“ z CHANGELOG.md (HACS / HA ho ukáže v okně
+      # aktualizace). Bez sekce zůstanou jen automaticky generované poznámky.
+      - name: Release notes from CHANGELOG.md
         run: |
-          npm ci
-          npm run build
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+          awk -v tag="$GITHUB_REF_NAME" '
+            $1 == "##" { if (found) exit; if ($2 == tag) { found = 1; next } }
+            found
+          ' CHANGELOG.md > release-notes.md
+          if [ -s release-notes.md ]; then
+            echo "Release notes for $GITHUB_REF_NAME:"; cat release-notes.md
+          else
+            echo "::warning::CHANGELOG.md nemá sekci ## $GITHUB_REF_NAME"
+          fi
+      - name: Attach dist to GitHub Release
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/ek-digital-clock.js
+          body_path: release-notes.md
           generate_release_notes: true
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

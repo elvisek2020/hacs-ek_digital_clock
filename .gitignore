@@ -7,5 +7,7 @@ node_modules/
 dist/*.map
 
 # Lokální pomocné adresáře – nikdy necommitovat
+# (_docs/ je deník práce, synchronizuje se přes iCloud)
 _backup/
 _docs/
+.cursor/

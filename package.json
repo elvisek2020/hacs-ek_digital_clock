@@ -1,11 +1,11 @@
 {
   "name": "ek-digital-clock",
   "version": "1.0.5",
-  "description": "Modern digital clock Lovelace card for Home Assistant with namedays, holidays and temperatures",
+  "description": "Custom Lovelace karta pro Home Assistant — digitální hodiny s jmeninami, státními svátky a teplotami",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elvisek2020/hacs-ek_digital_clock.git"
+    "url": "https://github.com/elvisek2020/hacs-ek_digital_clock"
   },
   "bugs": {
     "url": "https://github.com/elvisek2020/hacs-ek_digital_clock/issues"
