@@ -115,7 +115,7 @@ a resource načti s `?v=…`, ať prohlížeč nepoužije starou verzi z cache.
 
 ## Vydání verze
 
-1. Zvedni verzi v `package.json` a v `src/const.ts` (`CARD_VERSION`) (SemVer).
+1. Zvedni verzi v `package.json` (SemVer). Build ji sám vloží do karty.
 2. Doplň sekci `## vX.Y.Z — RRRR-MM-DD` do `CHANGELOG.md`.
 3. Commit `Release vX.Y.Z: …`, `git tag vX.Y.Z`, push commitu i tagu.
 4. GitHub Actions sestaví `ek-digital-clock.js`, vytvoří release s textem z CHANGELOG a HACS nabídne aktualizaci.
