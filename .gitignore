@@ -11,3 +11,5 @@ dist/*.map
 _backup/
 _docs/
 .cursor/
+# Lokální instrukce pro Claude Code
+CLAUDE.md
