@@ -6,9 +6,11 @@ export const cardStyles = css`
   }
 
   ha-card {
+    container-type: inline-size;
     height: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     padding: 12px 16px;
     box-sizing: border-box;
     overflow: hidden;
@@ -26,7 +28,9 @@ export const cardStyles = css`
 
   .row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    /* Boční sloupce nesmí být užší než hodnota teploty (jinak přeteče
+       do data), na úzké kartě ustoupí prostředek. */
+    grid-template-columns: minmax(min-content, 1fr) auto minmax(min-content, 1fr);
     align-items: center;
     gap: 12px;
     width: 100%;
@@ -57,6 +61,16 @@ export const cardStyles = css`
     line-height: 1.2;
     margin-top: 2px;
     opacity: 0.95;
+  }
+
+  /* Svátek a významný den jsou pod celým řádkem přes plnou šířku karty,
+     jinak by dlouhý název roztáhl prostřední sloupec a zmáčkl teploty. */
+  .events {
+    width: 100%;
+    min-width: 0;
+    text-align: center;
+    color: var(--primary-text-color);
+    text-wrap: balance;
   }
 
   .nameday,
@@ -220,5 +234,37 @@ export const cardStyles = css`
   }
   :host([data-size='large']) .temp-reading {
     font-size: 1.9em;
+  }
+
+  /* Úzká karta (mobil): menší písmo a mezery, ať se teploty a datum
+     vejdou vedle sebe. Compact je malý sám o sobě. */
+  @container (max-width: 420px) {
+    .row {
+      gap: 6px;
+    }
+    :host([data-size='normal']) .time {
+      font-size: 2.2em;
+    }
+    :host([data-size='normal']) .date {
+      font-size: 1em;
+    }
+    :host([data-size='normal']) .temp-label {
+      font-size: 0.8em;
+    }
+    :host([data-size='normal']) .temp-reading {
+      font-size: 1.2em;
+    }
+    :host([data-size='large']) .time {
+      font-size: 2.6em;
+    }
+    :host([data-size='large']) .date {
+      font-size: 1.15em;
+    }
+    :host([data-size='large']) .temp-label {
+      font-size: 0.9em;
+    }
+    :host([data-size='large']) .temp-reading {
+      font-size: 1.4em;
+    }
   }
 `;

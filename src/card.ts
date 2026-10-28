@@ -176,15 +176,19 @@ export class EkDigitalClock extends LitElement {
             ${this._nameday
               ? html`<span class="nameday">${this._nameday}</span>`
               : nothing}
-            ${this._holiday
-              ? html`<span class="holiday">${this._holiday}</span>`
-              : nothing}
-            ${this._significant
-              ? html`<span class="significant">${this._significant}</span>`
-              : nothing}
           </div>
           ${showTemps ? this._renderTemp(right, 'right') : nothing}
         </div>
+        ${this._holiday || this._significant
+          ? html`<div class="events">
+              ${this._holiday
+                ? html`<span class="holiday">${this._holiday}</span>`
+                : nothing}
+              ${this._significant
+                ? html`<span class="significant">${this._significant}</span>`
+                : nothing}
+            </div>`
+          : nothing}
       </ha-card>
     `;
   }

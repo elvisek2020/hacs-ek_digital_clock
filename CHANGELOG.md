@@ -5,6 +5,20 @@ text vydání na GitHubu — a ten Home Assistant / HACS ukazuje v okně aktuali
 
 Nejnovější verze je nahoře. Starší historie je v [GitHub releases](https://github.com/elvisek2020/hacs-ek_digital_clock/releases).
 
+## v1.0.7 — 2026-10-28
+
+### 🐛 Opravy
+
+- Dlouhý název státního svátku (např. 28. října) už neroztahuje hodiny do šířky. Svátek a významný den jsou teď pod hodinami přes celou šířku karty a popisky teplot se nezalamují.
+- Hodnota teploty už na úzké kartě nepřetéká do data.
+
+### 🎨 Vzhled
+
+- Na úzké kartě (mobil) se u velikostí Normal a Large písmo mírně zmenší, aby se teploty a datum vešly vedle sebe.
+
+> [!TIP]
+> Po aktualizaci obnov stránku bez cache.
+
 ## v1.0.6 — 2026-10-12
 
 Karta se funkčně nemění, vydání upravuje repozitář a dokumentaci.

@@ -6,6 +6,12 @@ node_modules/
 *.tsbuildinfo
 dist/*.map
 
+# Tajné údaje
+.env
+
+# Python cache (pomocné skripty)
+__pycache__/
+
 # Lokální pomocné adresáře – nikdy necommitovat
 # (_docs/ je deník práce, synchronizuje se přes iCloud)
 _backup/
