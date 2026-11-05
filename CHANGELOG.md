@@ -5,6 +5,15 @@ text vydání na GitHubu — a ten Home Assistant / HACS ukazuje v okně aktuali
 
 Nejnovější verze je nahoře. Starší historie je v [GitHub releases](https://github.com/elvisek2020/hacs-ek_digital_clock/releases).
 
+## v1.0.8 — 2026-11-05
+
+### ✨ Novinky
+
+- Teplota bez vlastního popisku ukazuje název stejně jako vestavěné karty Home Assistantu 2026.11 (zařízení a entita). Na starším Home Assistantu zůstává dosavadní název entity.
+
+> [!TIP]
+> Po aktualizaci obnov stránku bez cache.
+
 ## v1.0.7 — 2026-10-28
 
 ### 🐛 Opravy

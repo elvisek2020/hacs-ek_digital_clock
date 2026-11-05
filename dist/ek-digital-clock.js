@@ -794,7 +794,7 @@ function ir(t) {
   const n = e.length === 4 ? `#${e[1]}${e[1]}${e[2]}${e[2]}${e[3]}${e[3]}` : e, s = parseInt(n.slice(1, 3), 16), i = parseInt(n.slice(3, 5), 16), r = parseInt(n.slice(5, 7), 16);
   return `${s}, ${i}, ${r}`;
 }
-const rr = "1.0.7", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
+const rr = "1.0.8", Pe = "ek-digital-clock", us = "Ek Digital Clock", ar = "Digitální hodiny s jmeninami, státními svátky a teplotami", cs = "HH:mm", or = "cccc dd. L.", Ot = "Svátek:";
 class re extends Error {
 }
 class lr extends re {
@@ -7094,6 +7094,19 @@ const No = Xn`
   }
 `, Io = "mdi:thermometer", Co = ["unavailable", "unknown", "none", ""];
 function zo(t, e) {
+  if (!e)
+    return;
+  const n = t?.formatEntityName;
+  if (typeof n == "function")
+    try {
+      const s = n.call(t, e)?.trim();
+      if (s)
+        return s;
+    } catch {
+    }
+  return e.attributes?.friendly_name;
+}
+function Vo(t, e) {
   return !!(t?.entity || e?.entity);
 }
 function Kn(t, e, n, s) {
@@ -7107,7 +7120,7 @@ function Kn(t, e, n, s) {
   }
   const u = i?.attributes?.unit_of_measurement, d = e.unit?.trim(), c = e.show_unit === !1 || !l ? "" : d || u || "";
   return {
-    label: e.name || i?.attributes?.friendly_name || n,
+    label: e.name || zo(t, i) || n,
     value: o,
     unit: c,
     icon: e.icon || i?.attributes?.icon || s || Io,
@@ -7115,10 +7128,10 @@ function Kn(t, e, n, s) {
     entity: e.entity
   };
 }
-var Vo = Object.defineProperty, Fo = Object.getOwnPropertyDescriptor, K = (t, e, n, s) => {
-  for (var i = s > 1 ? void 0 : s ? Fo(e, n) : e, r = t.length - 1, a; r >= 0; r--)
+var Fo = Object.defineProperty, Lo = Object.getOwnPropertyDescriptor, K = (t, e, n, s) => {
+  for (var i = s > 1 ? void 0 : s ? Lo(e, n) : e, r = t.length - 1, a; r >= 0; r--)
     (a = t[r]) && (i = (s ? a(e, n, i) : a(i)) || i);
-  return s && i && Vo(e, n, i), i;
+  return s && i && Fo(e, n, i), i;
 };
 console.info(
   `%c ${us.toUpperCase()} %c ${rr} `,
@@ -7138,7 +7151,7 @@ let R = class extends he {
     super(...arguments), this._time = "", this._date = "", this._nameday = null, this._holiday = null, this._significant = null;
   }
   static async getConfigElement() {
-    return await Promise.resolve().then(() => Wo), document.createElement(`${Pe}-editor`);
+    return await Promise.resolve().then(() => Po), document.createElement(`${Pe}-editor`);
   }
   static getStubConfig() {
     return {
@@ -7188,7 +7201,7 @@ let R = class extends he {
       this._config.right_temperature,
       "Vnitřní",
       "mdi:thermometer"
-    ), n = zo(
+    ), n = Vo(
       this._config.left_temperature,
       this._config.right_temperature
     ), s = Ee(this._config.tap_action) || Ee(this._config.hold_action) || Ee(this._config.double_tap_action), i = yn({
@@ -7288,10 +7301,10 @@ K([
 R = K([
   is(Pe)
 ], R);
-var Lo = Object.defineProperty, Ro = Object.getOwnPropertyDescriptor, en = (t, e, n, s) => {
-  for (var i = s > 1 ? void 0 : s ? Ro(e, n) : e, r = t.length - 1, a; r >= 0; r--)
+var Ro = Object.defineProperty, Wo = Object.getOwnPropertyDescriptor, en = (t, e, n, s) => {
+  for (var i = s > 1 ? void 0 : s ? Wo(e, n) : e, r = t.length - 1, a; r >= 0; r--)
     (a = t[r]) && (i = (s ? a(e, n, i) : a(i)) || i);
-  return s && i && Lo(e, n, i), i;
+  return s && i && Ro(e, n, i), i;
 };
 function x(t) {
   return typeof t == "string" ? t : t == null ? "" : String(t);
@@ -7624,7 +7637,7 @@ en([
 ge = en([
   is(`${Pe}-editor`)
 ], ge);
-const Wo = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const Po = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   get EkDigitalClockEditor() {
     return ge;

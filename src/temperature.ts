@@ -5,6 +5,38 @@ import type { FormattedTemperature, TemperatureSlotConfig } from './types';
 const DEFAULT_ICON = 'mdi:thermometer';
 const UNAVAILABLE_STATES = ['unavailable', 'unknown', 'none', ''];
 
+type HassEntity = HomeAssistant['states'][string];
+
+/** `hass.formatEntityName` je v HA od 2026.4, custom-card-helpers ho nezná. */
+type HassWithEntityName = HomeAssistant & {
+  formatEntityName?: (stateObj: HassEntity) => string;
+};
+
+/**
+ * Název jako u vestavěných karet („Zařízení Entita“, HA 2026.11+).
+ * Na HA bez helperu záloha na `friendly_name`, který HA plánuje zrušit.
+ */
+function entityDisplayName(
+  hass: HomeAssistant | undefined,
+  stateObj: HassEntity | undefined,
+): string | undefined {
+  if (!stateObj) {
+    return undefined;
+  }
+  const format = (hass as HassWithEntityName | undefined)?.formatEntityName;
+  if (typeof format === 'function') {
+    try {
+      const name = format.call(hass, stateObj)?.trim();
+      if (name) {
+        return name;
+      }
+    } catch {
+      // Starší nebo rozbitý helper — pokračuj zálohou friendly_name.
+    }
+  }
+  return stateObj.attributes?.friendly_name;
+}
+
 export function hasTemperatureSlots(
   left?: TemperatureSlotConfig,
   right?: TemperatureSlotConfig,
@@ -44,7 +76,7 @@ export function formatTemperatureSlot(
       : (configuredUnit || stateUnit || '');
 
   return {
-    label: slot.name || stateObj?.attributes?.friendly_name || fallbackLabel,
+    label: slot.name || entityDisplayName(hass, stateObj) || fallbackLabel,
     value,
     unit,
     icon: slot.icon || stateObj?.attributes?.icon || fallbackIcon || DEFAULT_ICON,
