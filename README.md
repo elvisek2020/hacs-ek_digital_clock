@@ -1,4 +1,4 @@
-# Ek Digital Clock
+# Digitální hodiny (EK)
 
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![Release](https://img.shields.io/github/v/release/elvisek2020/hacs-ek_digital_clock)](https://github.com/elvisek2020/hacs-ek_digital_clock/releases)
@@ -10,7 +10,7 @@
 Moderní digitální hodiny pro dashboard Home Assistantu s jmeninami, státními svátky
 a teplotami po stranách. Všechno se nastaví v grafickém editoru, YAML není potřeba.
 
-![Ek Digital Clock — náhled](docs/preview.png)
+![Digitální hodiny (EK) — náhled](docs/preview.png)
 
 - Digitální čas a datum (Luxon formáty + předvolby v editoru)
 - České **jmeniny** (`namedays-cs`, offline v bundle)
@@ -33,9 +33,9 @@ Bez teplotních entit zůstane klasický vycentrovaný digi clock.
 
 1. HACS → tři tečky vpravo nahoře → **Custom repositories**
 2. Vlož URL `https://github.com/elvisek2020/hacs-ek_digital_clock`, kategorie **Dashboard**
-3. Nainstaluj **Ek Digital Clock**
+3. Nainstaluj **Digitální hodiny (EK)**
 4. Obnov stránku prohlížeče bez cache.
-5. Dashboard → **Přidat kartu** → Ek Digital Clock → nastav v UI
+5. Dashboard → **Přidat kartu** → Digitální hodiny (EK) → nastav v UI
 
 HACS nabízí aktualizace z GitHub releases.
 

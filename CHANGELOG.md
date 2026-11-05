@@ -5,6 +5,15 @@ text vydání na GitHubu — a ten Home Assistant / HACS ukazuje v okně aktuali
 
 Nejnovější verze je nahoře. Starší historie je v [GitHub releases](https://github.com/elvisek2020/hacs-ek_digital_clock/releases).
 
+## v1.0.9 — 2026-11-05
+
+### ✨ Novinky
+
+- Karta se jmenuje **Digitální hodiny (EK)** (dříve Ek Digital Clock). Nový název se ukáže v HACS i v nabídce „Přidat kartu“. Typ karty `custom:ek-digital-clock` zůstává, takže na dashboardech se nic upravovat nemusí.
+
+> [!TIP]
+> Po aktualizaci obnov stránku bez cache.
+
 ## v1.0.8 — 2026-11-05
 
 ### ✨ Novinky
